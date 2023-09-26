@@ -11,11 +11,20 @@ set "failedInstalls="
 :installSoftware
 set "app=%1"
 shift
+set "retryCount=0"
+:retry
 winget install -e --id %app%
 if %errorlevel% equ 0 (
     set "successfulInstalls=%successfulInstalls% %app%"
 ) else (
-    set "failedInstalls=%failedInstalls% %app% (Error: %errorlevel%)"
+    set /a "retryCount+=1"
+    if %retryCount% lss 3 (
+        echo Failed to install %app%. Retrying (%retryCount%)...
+        timeout /t 5 /nobreak >nul
+        goto retry
+    ) else (
+        set "failedInstalls=%failedInstalls% %app% (Error: %errorlevel%)"
+    )
 )
 goto :eof
 

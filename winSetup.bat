@@ -9,10 +9,11 @@ set "failedInstalls="
 
 :: Function to install software and track installation status
 :installSoftware
-set "app=%1"
+set "app=%~1"
 shift
 set "retryCount=0"
 :retry
+echo Argument: "%app%"
 winget install --id %app%
 if %errorlevel% equ 0 (
     set "successfulInstalls=%successfulInstalls% %app%"
@@ -29,15 +30,15 @@ if %errorlevel% equ 0 (
 goto :eof
 
 :: Install Standard Software
-call :installSoftware Mozilla.Firefox
-call :installSoftware Google.Chrome
-call :installSoftware Notion.Notion
-call :installSoftware Microsoft.Teams
-call :installSoftware Microsoft.Office
-call :installSoftware TheDocumentFoundation.LibreOffice
-call :installSoftware KeePassXCTeam.KeePassXC
-call :installSoftware IrfanSkiljan.IrfanView
-call :installSoftware GIMP.GIMP
+call :installSoftware "Mozilla.Firefox"
+call :installSoftware "Google.Chrome"
+call :installSoftware "Notion.Notion"
+call :installSoftware "Microsoft.Teams"
+call :installSoftware "Microsoft.Office"
+call :installSoftware "TheDocumentFoundation.LibreOffice"
+call :installSoftware "KeePassXCTeam.KeePassXC"
+call :installSoftware "IrfanSkiljan.IrfanView"
+call :installSoftware "GIMP.GIMP"
 
 :: Install Software Based on Team Selections
 if /i "%isOps%"=="y" (
@@ -47,15 +48,15 @@ if /i "%isOps%"=="y" (
 
 if /i "%isDev%"=="y" (
     :: Dev Team: Install development-related software
-    call :installSoftware Git.Git
-    call :installSoftware OpenJS.NodeJS
-    call :installSoftware Docker.DockerDesktop
-    call :installSoftware JetBrains.PHPStorm
+    call :installSoftware "Git.Git"
+    call :installSoftware "OpenJS.NodeJS"
+    call :installSoftware "Docker.DockerDesktop"
+    call :installSoftware "JetBrains.PHPStorm"
 )
 
 if /i "%isManagement%"=="y" (
     :: Management Team: Install management-related software
-    call :installSoftware AgileBits.1Password
+    call :installSoftware "AgileBits.1Password"
 )
 
 :: Display installation results

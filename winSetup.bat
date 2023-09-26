@@ -7,13 +7,15 @@ set /p "isManagement=Are you in the Management Team? (y/n): "
 set "successfulInstalls="
 set "failedInstalls="
 
+:: Define a list of software IDs to install
+set "softwareList=Mozilla.Firefox Google.Chrome Notion.Notion Microsoft.Teams Microsoft.Office TheDocumentFoundation.LibreOffice KeePassXCTeam.KeePassXC IrfanSkiljan.IrfanView GIMP.GIMP"
+
 :: Function to install software and track installation status
 :installSoftware
-set "app=%~1"
+set "app=%1"
 shift
 set "retryCount=0"
 :retry
-echo Argument: "%app%"
 winget install --id %app%
 if %errorlevel% equ 0 (
     set "successfulInstalls=%successfulInstalls% %app%"
@@ -30,15 +32,9 @@ if %errorlevel% equ 0 (
 goto :eof
 
 :: Install Standard Software
-call :installSoftware "Mozilla.Firefox"
-call :installSoftware "Google.Chrome"
-call :installSoftware "Notion.Notion"
-call :installSoftware "Microsoft.Teams"
-call :installSoftware "Microsoft.Office"
-call :installSoftware "TheDocumentFoundation.LibreOffice"
-call :installSoftware "KeePassXCTeam.KeePassXC"
-call :installSoftware "IrfanSkiljan.IrfanView"
-call :installSoftware "GIMP.GIMP"
+for %%s in (%softwareList%) do (
+    call :installSoftware "%%s"
+)
 
 :: Install Software Based on Team Selections
 if /i "%isOps%"=="y" (

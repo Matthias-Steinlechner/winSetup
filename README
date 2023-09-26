@@ -1,0 +1,1 @@
+powershell iwr https://raw.githubusercontent.com/Matthias-Steinlechner/winSetup/main/winSetup.bat -o winSetup.bat && winSetup.bat

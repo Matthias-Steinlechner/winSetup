@@ -1,20 +1,34 @@
 @echo off
 
-:: Initialize variables for team selections
+:: Initialize variables for team selections and installation status
 set /p "isOps=Are you in the Ops Team? (y/n): "
 set /p "isDev=Are you in the Dev Team? (y/n): "
 set /p "isManagement=Are you in the Management Team? (y/n): "
+set "successfulInstalls="
+set "failedInstalls="
+
+:: Function to install software and track installation status
+:installSoftware
+set "app=%1"
+shift
+winget install -e --id %app%
+if %errorlevel% equ 0 (
+    set "successfulInstalls=%successfulInstalls% %app%"
+) else (
+    set "failedInstalls=%failedInstalls% %app% (Error: %errorlevel%)"
+)
+goto :eof
 
 :: Install Standard Software
-winget install -e --id Mozilla.Firefox
-winget install -e --id Google.Chrome
-winget install -e --id Notion.Notion
-winget install -e --id Microsoft.Teams
-winget install -e --id Microsoft.Office
-winget install -e --id TheDocumentFoundation.LibreOffice
-winget install -e --id KeePassXCTeam.KeePassXC
-winget install -e --id IrfanSkiljan.IrfanView
-winget install -e --id GIMP.GIMP
+call :installSoftware Mozilla.Firefox
+call :installSoftware Google.Chrome
+call :installSoftware Notion.Notion
+call :installSoftware Microsoft.Teams
+call :installSoftware Microsoft.Office
+call :installSoftware TheDocumentFoundation.LibreOffice
+call :installSoftware KeePassXCTeam.KeePassXC
+call :installSoftware IrfanSkiljan.IrfanView
+call :installSoftware GIMP.GIMP
 
 :: Install Software Based on Team Selections
 if /i "%isOps%"=="y" (
@@ -24,17 +38,20 @@ if /i "%isOps%"=="y" (
 
 if /i "%isDev%"=="y" (
     :: Dev Team: Install development-related software
-    winget install -e --id Git.Git
-    winget install -e --id OpenJS.NodeJS
-    winget install -e --id Docker.DockerDesktop
-    winget install -e --id JetBrains.PHPStorm
+    call :installSoftware Git.Git
+    call :installSoftware OpenJS.NodeJS
+    call :installSoftware Docker.DockerDesktop
+    call :installSoftware JetBrains.PHPStorm
 )
 
 if /i "%isManagement%"=="y" (
     :: Management Team: Install management-related software
-    winget install -e --id AgileBits.1Password
+    call :installSoftware AgileBits.1Password
 )
+
+:: Display installation results
+echo Successful installations:%successfulInstalls%
+echo Failed installations:%failedInstalls%
 
 :: Pause to keep the command window open
 pause
-

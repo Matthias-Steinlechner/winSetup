@@ -13,7 +13,7 @@ set "app=%1"
 shift
 set "retryCount=0"
 :retry
-winget install -e --id %app%
+winget install --id %app%
 if %errorlevel% equ 0 (
     set "successfulInstalls=%successfulInstalls% %app%"
 ) else (
